@@ -1,0 +1,15 @@
+{
+  "name": "رفيق القرآن",
+  "short_name": "رفيق القرآن",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#2c5f2d",
+  "theme_color": "#2c5f2d",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

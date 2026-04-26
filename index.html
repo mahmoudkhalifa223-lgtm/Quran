@@ -3,82 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>رفيق القرآن</title>
+    <title>رفيق الحفظ</title>
 
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#004b23">
+    <meta name="theme-color" content="#78350f">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="رفيق القرآن">
+    <meta name="apple-mobile-web-app-title" content="رفيق الحفظ">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700;900&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <base target="_blank">
 </head>
-<body class="theme-classic">
+<body class="theme-tajweed">
 
-    <!-- Offline Indicator -->
     <div id="offlineIndicator" class="offline-indicator hidden">
         <i class="fas fa-wifi-slash"></i> أنت في وضع عدم الاتصال
     </div>
 
-    <!-- Install PWA Button -->
     <button id="installBtn" class="install-btn hidden" onclick="installPWA()">
         <i class="fas fa-download"></i> ثبّت التطبيق
     </button>
 
-    <!-- Toast Container -->
     <div id="toastContainer" class="toast-container"></div>
 
     <div id="splashScreen" class="splash-screen">
         <div class="splash-content">
             <div class="splash-logo">
-                <i class="fas fa-book-quran"></i>
+                <i class="fas fa-brain"></i>
             </div>
-            <h2 class="dua-text">ادعوا لي ولوالدي بالرحمة</h2>
-            <h3 class="welcome-text">يسر الله لك</h3>
+            <h2 class="dua-text">اللهم ذكرني منه ما نُسّيت</h2>
+            <h3 class="welcome-text">مرحباً بك في رفيق الحفظ</h3>
             <div class="splash-loader"></div>
         </div>
     </div>
 
     <div class="app-container" id="mainApp" style="display: none;">
+
         <header class="main-header">
             <div class="header-content">
-                <h2 id="viewTitle">المصحف الشريف</h2>
+                <h2 id="viewTitle">خطة الحفظ</h2>
                 <div class="header-actions">
-                    <button id="settingsBtn" onclick="switchScreen('settings')" class="header-icon-btn"><i class="fas fa-cog"></i></button>
                     <button id="themeToggle" onclick="toggleDarkMode()" class="header-icon-btn"><i class="fas fa-moon"></i></button>
+                    <button id="settingsBtn" onclick="switchScreen('settings')" class="header-icon-btn"><i class="fas fa-cog"></i></button>
                 </div>
             </div>
         </header>
 
-        <!-- Home Screen -->
-        <section id="homeScreen" class="screen active">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="ابحث عن سورة أو آية..." onkeyup="searchSurah()">
+        <section id="planScreen" class="screen active">
+            <div class="plan-header">
+                <i class="fas fa-calendar-check"></i>
+                <h3>متابعة الحفظ والورد</h3>
             </div>
 
-            <!-- Daily Werd Card -->
-            <div id="dailyWerdCard" class="daily-werd-card hidden" onclick="goToDailyWerd()">
-                <div class="werd-header">
-                    <i class="fas fa-sun"></i>
-                    <span>ورد اليوم</span>
-                    <span id="werdProgress" class="werd-progress-badge">0%</span>
-                </div>
-                <div class="werd-body">
-                    <p id="werdText">جاري تحميل الورد...</p>
-                    <div class="werd-progress-bar">
-                        <div id="werdProgressFill" class="werd-progress-fill"></div>
-                    </div>
-                </div>
-                <button class="werd-action-btn" onclick="event.stopPropagation(); markWerdComplete()">
-                    <i class="fas fa-check-circle"></i> أكملت الورد
-                </button>
-            </div>
-
-            <!-- Stats Preview -->
             <div class="stats-preview" onclick="switchScreen('stats')">
                 <div class="stat-item">
                     <i class="fas fa-fire"></i>
@@ -97,140 +74,26 @@
                 </div>
             </div>
 
-            <div class="surahs-grid" id="surahGrid"></div>
-        </section>
-
-        <!-- Reader Screen - Professional Mushaf Style -->
-        <section id="readerScreen" class="screen hidden">
-            <div class="reader-nav">
-                <button onclick="switchScreen('home')"><i class="fas fa-chevron-right"></i> رجوع</button>
-                <h3 id="currentSurahName">السورة</h3>
-                <div class="reader-actions">
-                    <button onclick="toggleBookmark()" id="bookmarkBtn" class="reader-icon-btn"><i class="far fa-bookmark"></i></button>
-                    <button onclick="toggleAudio()" id="playBtn" class="reader-icon-btn"><i class="fas fa-play-circle"></i></button>
+            <div id="dailyWerdCard" class="daily-werd-card hidden" onclick="goToDailyWerd()">
+                <div class="werd-header">
+                    <i class="fas fa-sun"></i>
+                    <span>ورد الحفظ / المراجعة</span>
+                    <span id="werdProgress" class="werd-progress-badge">0%</span>
                 </div>
-            </div>
-
-            <!-- Reader Toolbar -->
-            <div class="reader-toolbar">
-                <div class="reciter-selector">
-                    <i class="fas fa-headphones"></i>
-                    <select id="reciterSelect" onchange="changeReciter()">
-                        <option value="ar.alafasy">مشاري العفاسي</option>
-                        <option value="ar.abdulbasit">عبد الباسط عبد الصمد</option>
-                        <option value="ar.husary">محمود خليل الحصري</option>
-                        <option value="ar.minshawi">محمد صديق المنشاوي</option>
-                        <option value="ar.ajamy">أحمد بن علي العجمي</option>
-                        <option value="ar.muhsinalharthi">محسن الحارثي</option>
-                    </select>
-                </div>
-                <div class="font-controls">
-                    <button onclick="changeFontSize(-1)" class="font-btn"><i class="fas fa-minus"></i></button>
-                    <span id="fontSizeDisplay">100%</span>
-                    <button onclick="changeFontSize(1)" class="font-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-
-            <!-- Professional Mushaf Container -->
-            <div class="mushaf-container" id="mushafContainer">
-                <div class="mushaf-page" id="quranContent">
-                    <!-- Content will be rendered here -->
-                </div>
-
-                <!-- Page Footer -->
-                <div class="mushaf-footer">
-                    <span class="juz-marker" id="juzMarker">الجزء الأول</span>
-                    <span class="page-number" id="pageNumber">صفحة 1</span>
-                    <span class="hizb-marker" id="hizbMarker">الحزب 1</span>
-                </div>
-            </div>
-
-            <!-- Auto-play Next Toggle -->
-            <div class="auto-play-bar">
-                <label class="switch">
-                    <input type="checkbox" id="autoPlayToggle" onchange="toggleAutoPlay()">
-                    <span class="slider"></span>
-                </label>
-                <span>الانتقال التلقائي للسورة التالية</span>
-            </div>
-        </section>
-
-        <!-- Quiz Screen -->
-        <section id="quizScreen" class="screen hidden">
-            <div class="quiz-setup-card">
-                <i class="fas fa-graduation-cap quiz-main-icon"></i>
-                <h3>اختبار الحفظ الذكي</h3>
-
-                <div class="quiz-stats-bar">
-                    <div class="quiz-stat">
-                        <i class="fas fa-fire"></i>
-                        <span id="quizStreak">0</span>
-                    </div>
-                    <div class="quiz-stat">
-                        <i class="fas fa-check-circle"></i>
-                        <span id="quizCorrect">0</span>
-                    </div>
-                    <div class="quiz-stat">
-                        <i class="fas fa-times-circle"></i>
-                        <span id="quizWrong">0</span>
+                <div class="werd-body">
+                    <p id="werdText">جاري تحميل الورد...</p>
+                    <div class="werd-progress-bar">
+                        <div id="werdProgressFill" class="werd-progress-fill"></div>
                     </div>
                 </div>
-
-                <select id="quizType" class="custom-input">
-                    <option value="random">أكمل الآية (عشوائي)</option>
-                    <option value="next">ما هي الآية التالية؟</option>
-                    <option value="prev">ما هي الآية السابقة؟</option>
-                    <option value="mcq">اختر التكملة الصحيحة</option>
-                    <option value="fullSurah">اختبار السورة الكاملة</option>
-                    <option value="tajweed">اختبار التجويد (كلمات مبعثرة)</option>
-                    <option value="review">اختبار المراجعات</option>
-                    <option value="speed">اختبار السرعة ⏱️</option>
-                </select>
-
-                <div class="range-inputs">
-                    <input type="number" id="pageStart" placeholder="من صفحة" min="1" max="604">
-                    <input type="number" id="pageEnd" placeholder="إلى صفحة" min="1" max="604">
-                </div>
-
-                <button class="gold-btn" onclick="startQuiz()">ابدأ الاختبار</button>
-            </div>
-
-            <div id="quizArea" class="quiz-display hidden">
-                <div id="speedTimer" class="speed-timer hidden">
-                    <i class="fas fa-stopwatch"></i>
-                    <span id="timerDisplay">30</span>
-                </div>
-
-                <div class="quiz-card">
-                    <span id="quizLocation"></span>
-                    <div id="quizQuestion" class="uthmani-font"></div>
-                    <div id="scrambledWords" class="scrambled-words hidden"></div>
-                    <div id="quizOptions" class="options-grid hidden"></div>
-                    <button class="reveal-btn" id="revealBtn" onclick="revealAnswer()">تحقق من الإجابة</button>
-                    <div id="quizAnswer" class="uthmani-font hidden"></div>
-                    <div id="xpReward" class="xp-reward hidden">
-                        <i class="fas fa-star"></i>
-                        <span>+10 نقاط</span>
-                    </div>
-                </div>
-
-                <div class="quiz-actions">
-                    <button class="next-btn" onclick="startQuiz()">الآية التالية ➔</button>
-                    <button class="share-btn" onclick="shareResult()"><i class="fas fa-share-alt"></i></button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Plan Screen -->
-        <section id="planScreen" class="screen hidden">
-            <div class="plan-header">
-                <i class="fas fa-calendar-check"></i>
-                <h3>خطة الحفظ</h3>
+                <button class="werd-action-btn" onclick="event.stopPropagation(); markWerdComplete()">
+                    <i class="fas fa-check-circle"></i> أتممت إنجاز الورد
+                </button>
             </div>
 
             <div id="activePlanCard" class="active-plan-card hidden">
                 <div class="plan-info">
-                    <h4 id="activePlanName">خطة الختمة في 30 يوم</h4>
+                    <h4 id="activePlanName">خطة الختمة</h4>
                     <div class="plan-progress">
                         <div class="plan-progress-bar">
                             <div id="planProgressFill" class="plan-progress-fill"></div>
@@ -240,15 +103,15 @@
                     <p id="planDaysLeft">متبقي 30 يوم</p>
                 </div>
                 <div class="plan-actions">
-                    <button class="plan-btn primary" onclick="goToTodayWerd()"><i class="fas fa-book-open"></i> ورد اليوم</button>
+                    <button class="plan-btn primary" onclick="goToDailyWerd()"><i class="fas fa-book-open"></i> تفاصيل الورد</button>
                     <button class="plan-btn" onclick="showPlanCalendar()"><i class="fas fa-calendar"></i> التقويم</button>
                 </div>
             </div>
 
             <div id="noPlanState" class="no-plan-state">
                 <i class="fas fa-route"></i>
-                <p>ليس لديك خطة حفظ نشطة</p>
-                <p class="sub-text">اختر خطة من الأسفل لتبدأ رحلتك</p>
+                <p>ليس لديك خطة نشطة</p>
+                <p class="sub-text">اختر خطة من الأسفل لتبدأ رحلتك في الحفظ</p>
             </div>
 
             <div class="plan-templates">
@@ -257,7 +120,7 @@
                 <div class="plan-card" onclick="startPlan('khatma30')">
                     <div class="plan-icon"><i class="fas fa-bolt"></i></div>
                     <div class="plan-details">
-                        <h5>ختمة في 30 يوم</h5>
+                        <h5>مراجعة مكثفة في 30 يوم</h5>
                         <p>جزء واحد يومياً - 20 صفحة</p>
                         <span class="plan-tag intense">مكثف</span>
                     </div>
@@ -266,7 +129,7 @@
                 <div class="plan-card" onclick="startPlan('khatma60')">
                     <div class="plan-icon"><i class="fas fa-walking"></i></div>
                     <div class="plan-details">
-                        <h5>ختمة في 60 يوم</h5>
+                        <h5>حفظ متوسط في 60 يوم</h5>
                         <p>نصف جزء يومياً - 10 صفحات</p>
                         <span class="plan-tag moderate">متوسط</span>
                     </div>
@@ -275,27 +138,9 @@
                 <div class="plan-card" onclick="startPlan('khatma365')">
                     <div class="plan-icon"><i class="fas fa-leaf"></i></div>
                     <div class="plan-details">
-                        <h5>ختمة في سنة</h5>
-                        <p>3 صفحات يومياً - جزء كل 10 أيام</p>
+                        <h5>حفظ ميسر في سنة</h5>
+                        <p>صفحتين يومياً</p>
                         <span class="plan-tag light">خفيف</span>
-                    </div>
-                </div>
-
-                <div class="plan-card" onclick="startPlan('shortSurahs')">
-                    <div class="plan-icon"><i class="fas fa-seedling"></i></div>
-                    <div class="plan-details">
-                        <h5>خطة السور القصيرة</h5>
-                        <p>ابدأ بالمعوذتين والأخلاص والفلق</p>
-                        <span class="plan-tag beginner">مبتدئ</span>
-                    </div>
-                </div>
-
-                <div class="plan-card" onclick="startPlan('tajweed')">
-                    <div class="plan-icon"><i class="fas fa-microphone"></i></div>
-                    <div class="plan-details">
-                        <h5>خطة التجويد</h5>
-                        <p>السور ذات الأحكام الخاصة</p>
-                        <span class="plan-tag special">تجويد</span>
                     </div>
                 </div>
 
@@ -321,14 +166,17 @@
             <div id="customPlanModal" class="modal hidden">
                 <div class="modal-content">
                     <div class="handle"></div>
-                    <h4><i class="fas fa-sliders-h"></i> خطة مخصصة</h4>
+                    <h4><i class="fas fa-sliders-h"></i> إعداد خطة مخصصة</h4>
                     <div class="custom-plan-form">
                         <label>عدد الصفحات يومياً</label>
                         <input type="number" id="customPagesPerDay" min="1" max="60" value="5" class="custom-input">
-                        <label>من صفحة</label>
+
+                        <label>من صفحة رقم</label>
                         <input type="number" id="customStartPage" min="1" max="604" value="1" class="custom-input">
-                        <label>إلى صفحة</label>
+
+                        <label>إلى صفحة رقم</label>
                         <input type="number" id="customEndPage" min="1" max="604" value="604" class="custom-input">
+
                         <p id="customPlanEstimate" class="plan-estimate">المدة المتوقعة: 121 يوم</p>
                     </div>
                     <button class="gold-btn" onclick="confirmCustomPlan()">ابدأ الخطة</button>
@@ -337,7 +185,83 @@
             </div>
         </section>
 
-        <!-- Stats Screen -->
+        <section id="quizScreen" class="screen hidden">
+            <div class="quiz-setup-card">
+                <i class="fas fa-graduation-cap quiz-main-icon"></i>
+                <h3>اختبار الحفظ الذكي</h3>
+
+                <div class="quiz-stats-bar">
+                    <div class="quiz-stat">
+                        <i class="fas fa-fire"></i>
+                        <span id="quizStreak">0</span>
+                    </div>
+                    <div class="quiz-stat">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="quizCorrect">0</span>
+                    </div>
+                    <div class="quiz-stat">
+                        <i class="fas fa-times-circle"></i>
+                        <span id="quizWrong">0</span>
+                    </div>
+                </div>
+
+                <select id="quizType" class="custom-input">
+                    <option value="random">أكمل الآية (عشوائي)</option>
+                    <option value="next">ما هي الآية التالية؟</option>
+                    <option value="prev">ما هي الآية السابقة؟</option>
+                    <option value="mcq">اختر التكملة الصحيحة (خيارات)</option>
+                    <option value="fullSurah">اختبار أسماء السور</option>
+                    <option value="tajweed">اختبار الترتيب (كلمات مبعثرة)</option>
+                    <option value="speed">اختبار السرعة ⏱️</option>
+                </select>
+
+                <div class="range-inputs">
+                    <input type="number" id="pageStart" placeholder="من صفحة" min="1" max="604">
+                    <input type="number" id="pageEnd" placeholder="إلى صفحة" min="1" max="604">
+                </div>
+
+                <button class="gold-btn" onclick="startQuiz()">ابدأ الاختبار</button>
+            </div>
+
+            <div id="quizArea" class="quiz-display hidden">
+                <div id="speedTimer" class="speed-timer hidden">
+                    <i class="fas fa-stopwatch"></i>
+                    <span id="timerDisplay">30</span>
+                </div>
+
+                <div class="quiz-card">
+                    <span id="quizLocation"></span>
+                    <div id="quizQuestion" class="uthmani-font"></div>
+
+                    <div id="scrambledWords" class="scrambled-words hidden"></div>
+
+                    <div id="quizOptions" class="options-grid hidden"></div>
+
+                    <button class="reveal-btn" id="revealBtn" onclick="revealAnswer()">تحقق من الإجابة</button>
+
+                    <div id="quizAnswer" class="uthmani-font hidden"></div>
+
+                    <div id="selfAssessment" class="self-assessment-actions hidden" style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                        <button class="setting-btn" style="border-color: var(--success); color: var(--success);" onclick="markSelfAssessment(true)">
+                            <i class="fas fa-check"></i> جاوبت صح
+                        </button>
+                        <button class="setting-btn" style="border-color: var(--danger); color: var(--danger);" onclick="markSelfAssessment(false)">
+                            <i class="fas fa-times"></i> أخطأت
+                        </button>
+                    </div>
+
+                    <div id="xpReward" class="xp-reward hidden">
+                        <i class="fas fa-star"></i>
+                        <span>+10 نقاط</span>
+                    </div>
+                </div>
+
+                <div class="quiz-actions">
+                    <button class="next-btn" onclick="startQuiz()">السؤال التالي ➔</button>
+                </div>
+            </div>
+        </section>
+
         <section id="statsScreen" class="screen hidden">
             <div class="stats-header">
                 <i class="fas fa-chart-line"></i>
@@ -360,15 +284,10 @@
                     <span id="statCompleted" class="stat-number">0</span>
                     <span class="stat-label">ورد مكتمل</span>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-clock"></i>
-                    <span id="statTime" class="stat-number">0</span>
-                    <span class="stat-label">دقيقة قراءة</span>
-                </div>
             </div>
 
             <div class="chart-card">
-                <h4><i class="fas fa-chart-bar"></i> نشاط الأسبوع</h4>
+                <h4><i class="fas fa-chart-bar"></i> نشاط الأسبوع (بالصفحات)</h4>
                 <div id="weeklyChart" class="weekly-chart">
                     <div class="chart-bar" data-day="السبت"><div class="bar-fill" style="height:0%"></div></div>
                     <div class="chart-bar" data-day="الأحد"><div class="bar-fill" style="height:0%"></div></div>
@@ -381,125 +300,22 @@
             </div>
 
             <div class="badges-section">
-                <h4><i class="fas fa-medal"></i> الشارات</h4>
-                <div id="badgesGrid" class="badges-grid"></div>
-            </div>
-
-            <div class="history-section">
-                <h4><i class="fas fa-history"></i> سجل القراءة</h4>
-                <div id="readingHistory" class="reading-history"></div>
+                <h4><i class="fas fa-medal"></i> الشارات والإنجازات</h4>
+                <div id="badgesGrid" class="badges-grid">
+                </div>
             </div>
         </section>
 
-        <!-- Settings Screen -->
         <section id="settingsScreen" class="screen hidden">
             <div class="settings-header">
                 <i class="fas fa-cog"></i>
                 <h3>الإعدادات</h3>
             </div>
 
-            <!-- Theme Selector -->
             <div class="settings-group">
-                <h4><i class="fas fa-palette"></i> الثيم والألوان</h4>
-
-                <div class="theme-selector">
-                    <p class="setting-label">اختر ثيم التطبيق:</p>
-                    <div class="theme-options">
-                        <div class="theme-option" data-theme="classic" onclick="setTheme('classic')">
-                            <div class="theme-preview theme-classic-preview">
-                                <div class="theme-preview-header"></div>
-                                <div class="theme-preview-body"></div>
-                            </div>
-                            <span>كلاسيكي</span>
-                            <i class="fas fa-check theme-check"></i>
-                        </div>
-                        <div class="theme-option" data-theme="ocean" onclick="setTheme('ocean')">
-                            <div class="theme-preview theme-ocean-preview">
-                                <div class="theme-preview-header"></div>
-                                <div class="theme-preview-body"></div>
-                            </div>
-                            <span>محيطي</span>
-                            <i class="fas fa-check theme-check"></i>
-                        </div>
-                        <div class="theme-option" data-theme="royal" onclick="setTheme('royal')">
-                            <div class="theme-preview theme-royal-preview">
-                                <div class="theme-preview-header"></div>
-                                <div class="theme-preview-body"></div>
-                            </div>
-                            <span>ملكي</span>
-                            <i class="fas fa-check theme-check"></i>
-                        </div>
-                        <div class="theme-option" data-theme="sunset" onclick="setTheme('sunset')">
-                            <div class="theme-preview theme-sunset-preview">
-                                <div class="theme-preview-header"></div>
-                                <div class="theme-preview-body"></div>
-                            </div>
-                            <span>غروب</span>
-                            <i class="fas fa-check theme-check"></i>
-                        </div>
-                        <div class="theme-option" data-theme="forest" onclick="setTheme('forest')">
-                            <div class="theme-preview theme-forest-preview">
-                                <div class="theme-preview-header"></div>
-                                <div class="theme-preview-body"></div>
-                            </div>
-                            <span>غابة</span>
-                            <i class="fas fa-check theme-check"></i>
-                        </div>
-                        <div class="theme-option" data-theme="midnight" onclick="setTheme('midnight')">
-                            <div class="theme-preview theme-midnight-preview">
-                                <div class="theme-preview-header"></div>
-                                <div class="theme-preview-body"></div>
-                            </div>
-                            <span>منتصف الليل</span>
-                            <i class="fas fa-check theme-check"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mushaf-style-selector">
-                    <p class="setting-label">نمط عرض المصحف:</p>
-                    <div class="mushaf-options">
-                        <div class="mushaf-option active" data-style="uthmani" onclick="setMushafStyle('uthmani')">
-                            <div class="mushaf-preview mushaf-uthmani">
-                                <span class="mushaf-preview-text">بِسْمِ ٱللَّهِ</span>
-                            </div>
-                            <span>عثماني</span>
-                        </div>
-                        <div class="mushaf-option" data-style="mushaf-madinah" onclick="setMushafStyle('mushaf-madinah')">
-                            <div class="mushaf-preview mushaf-madinah">
-                                <span class="mushaf-preview-text">بِسْمِ ٱللَّهِ</span>
-                            </div>
-                            <span>مصحف المدينة</span>
-                        </div>
-                        <div class="mushaf-option" data-style="simple" onclick="setMushafStyle('simple')">
-                            <div class="mushaf-preview mushaf-simple">
-                                <span class="mushaf-preview-text">بسم الله</span>
-                            </div>
-                            <span>مبسط</span>
-                        </div>
-                    </div>
-                </div>
-
+                <h4><i class="fas fa-bell"></i> الإشعارات والتذكير</h4>
                 <div class="setting-item">
-                    <span>الوضع الداكن</span>
-                    <label class="switch">
-                        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkModeFromSettings()">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="setting-item">
-                    <span>حجم الخط الافتراضي</span>
-                    <div class="font-size-slider">
-                        <input type="range" id="defaultFontSize" min="80" max="150" value="100" onchange="updateDefaultFontSize()">
-                        <span id="defaultFontSizeValue">100%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="settings-group">
-                <h4><i class="fas fa-bell"></i> الإشعارات</h4>
-                <div class="setting-item">
-                    <span>تذكير يومي بالورد</span>
+                    <span>تذكير يومي بورد الحفظ</span>
                     <label class="switch">
                         <input type="checkbox" id="dailyReminderToggle" onchange="toggleDailyReminder()">
                         <span class="slider"></span>
@@ -512,175 +328,40 @@
             </div>
 
             <div class="settings-group">
-                <h4><i class="fas fa-database"></i> البيانات</h4>
+                <h4><i class="fas fa-database"></i> البيانات والنسخ الاحتياطي</h4>
                 <button class="setting-btn" onclick="exportData()">
-                    <i class="fas fa-download"></i> تصدير البيانات
+                    <i class="fas fa-download"></i> حفظ نسخة من تقدمي
                 </button>
                 <button class="setting-btn" onclick="importData()">
-                    <i class="fas fa-upload"></i> استيراد البيانات
+                    <i class="fas fa-upload"></i> استعادة النسخة الاحتياطية
                 </button>
                 <button class="setting-btn danger" onclick="resetAllData()">
-                    <i class="fas fa-trash-alt"></i> مسح جميع البيانات
-                </button>
-            </div>
-
-            <div class="settings-group">
-                <h4><i class="fas fa-star"></i> تقييم التطبيق</h4>
-                <div class="app-rating-preview" onclick="openReviewModal()">
-                    <div class="rating-stars-large" id="appRatingStars">
-                        <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                    </div>
-                    <span id="appRatingValue">0.0</span>
-                    <small id="appRatingCount">(0 تقييم)</small>
-                </div>
-                <button class="setting-btn" onclick="openReviewModal()">
-                    <i class="fas fa-pen"></i> اكتب تقييمك
+                    <i class="fas fa-trash-alt"></i> مسح جميع البيانات والبدء من جديد
                 </button>
             </div>
 
             <div class="settings-group">
                 <h4><i class="fas fa-info-circle"></i> عن التطبيق</h4>
                 <div class="about-app">
-                    <i class="fas fa-book-quran"></i>
-                    <h5>رفيق القرآن</h5>
-                    <p>نسخة 2.0</p>
-                    <p>تطبيق لحفظ القرآن الكريم وتجويده</p>
+                    <i class="fas fa-brain"></i>
+                    <h5>رفيق الحفظ</h5>
+                    <p>نسخة مخصصة للمراجعة والاختبارات</p>
                 </div>
             </div>
         </section>
 
-        <!-- Search Results Modal -->
-        <div id="searchModal" class="modal hidden">
-            <div class="modal-content search-modal">
-                <div class="handle"></div>
-                <h4><i class="fas fa-search"></i> نتائج البحث</h4>
-                <div id="searchResults" class="search-results"></div>
-                <button class="close-btn" onclick="closeSearchModal()">إغلاق</button>
-            </div>
-        </div>
-
-        <!-- Tafsir Modal -->
-        <div id="tafsirModal" class="modal hidden">
-            <div class="modal-content">
-                <div class="handle"></div>
-                <h4 id="tafsirTitle">التفسير</h4>
-                <p id="tafsirBody">...</p>
-                <button class="close-btn" onclick="closeTafsir()">إغلاق</button>
-            </div>
-        </div>
-
-        <!-- Share Modal -->
-        <div id="shareModal" class="modal hidden">
-            <div class="modal-content share-modal-content">
-                <div class="handle"></div>
-                <h4><i class="fas fa-share-alt"></i> مشاركة الآية</h4>
-                <div id="sharePreview" class="share-preview"></div>
-                <div class="share-actions">
-                    <button class="share-action-btn" onclick="copyAyahText()"><i class="fas fa-copy"></i> نسخ</button>
-                    <button class="share-action-btn" onclick="shareAsImage()"><i class="fas fa-image"></i> صورة</button>
-                    <button class="share-action-btn" onclick="shareViaWhatsApp()"><i class="fab fa-whatsapp"></i> واتساب</button>
-                </div>
-                <button class="close-btn" onclick="closeShareModal()">إغلاق</button>
-            </div>
-        </div>
-
-        <!-- Bookmarks Modal -->
-        <div id="bookmarksModal" class="modal hidden">
-            <div class="modal-content bookmarks-modal">
-                <div class="handle"></div>
-                <h4><i class="fas fa-bookmark"></i> العلامات المرجعية</h4>
-                <div id="bookmarksList" class="bookmarks-list"></div>
-                <button class="close-btn" onclick="closeBookmarksModal()">إغلاق</button>
-            </div>
-        </div>
-
-        <!-- Review Modal -->
-        <div id="reviewModal" class="modal hidden">
-            <div class="modal-content review-modal-content">
-                <div class="handle"></div>
-                <div class="review-header">
-                    <i class="fas fa-star"></i>
-                    <h4>قيّم رفيق القرآن</h4>
-                    <p>رأيك يهمنا ويساعدنا في التحسين المستمر</p>
-                </div>
-
-                <div class="review-form">
-                    <div class="rating-input">
-                        <span>التقييم:</span>
-                        <div class="star-rating-input" id="starRatingInput">
-                            <i class="far fa-star" data-rating="1"></i>
-                            <i class="far fa-star" data-rating="2"></i>
-                            <i class="far fa-star" data-rating="3"></i>
-                            <i class="far fa-star" data-rating="4"></i>
-                            <i class="far fa-star" data-rating="5"></i>
-                        </div>
-                        <span id="ratingLabel" class="rating-label">اختر تقييمك</span>
-                    </div>
-
-                    <div class="review-name-input">
-                        <label>اسمك (اختياري)</label>
-                        <input type="text" id="reviewerName" class="custom-input" placeholder="اسمك الكريم">
-                    </div>
-
-                    <div class="review-text-input">
-                        <label>تعليقك</label>
-                        <textarea id="reviewText" class="custom-input review-textarea" placeholder="شاركنا رأيك في التطبيق..." rows="4"></textarea>
-                    </div>
-
-                    <div class="review-tags">
-                        <label>ما الذي أعجبك؟ (اختياري)</label>
-                        <div class="tags-grid" id="reviewTags">
-                            <span class="review-tag" data-tag="design" onclick="toggleReviewTag(this)"><i class="fas fa-paint-brush"></i> التصميم</span>
-                            <span class="review-tag" data-tag="ease" onclick="toggleReviewTag(this)"><i class="fas fa-hand-pointer"></i> سهولة الاستخدام</span>
-                            <span class="review-tag" data-tag="quizzes" onclick="toggleReviewTag(this)"><i class="fas fa-brain"></i> الاختبارات</span>
-                            <span class="review-tag" data-tag="plan" onclick="toggleReviewTag(this)"><i class="fas fa-calendar-check"></i> خطط الحفظ</span>
-                            <span class="review-tag" data-tag="audio" onclick="toggleReviewTag(this)"><i class="fas fa-headphones"></i> التلاوات</span>
-                            <span class="review-tag" data-tag="offline" onclick="toggleReviewTag(this)"><i class="fas fa-wifi-slash"></i> العمل بدون نت</span>
-                        </div>
-                    </div>
-
-                    <button class="gold-btn" onclick="submitReview()">
-                        <i class="fas fa-paper-plane"></i> إرسال التقييم
-                    </button>
-                </div>
-
-                <div class="reviews-divider"></div>
-
-                <div class="reviews-list-section">
-                    <h5><i class="fas fa-comments"></i> تقييمات المستخدمين</h5>
-                    <div id="reviewsList" class="reviews-list">
-                        <p class="no-reviews">لا توجد تقييمات بعد. كن أول من يقيّم!</p>
-                    </div>
-                </div>
-
-                <button class="close-btn" onclick="closeReviewModal()">إغلاق</button>
-            </div>
-        </div>
-
-        <!-- Review Success Animation -->
-        <div id="reviewSuccess" class="review-success hidden">
-            <div class="success-content">
-                <i class="fas fa-check-circle"></i>
-                <h3>شكراً لك!</h3>
-                <p>تم إرسال تقييمك بنجاح</p>
-                <div class="confetti"></div>
-            </div>
-        </div>
-
         <nav class="bottom-nav">
-            <div class="nav-item active" id="navHome" onclick="switchScreen('home')">
-                <i class="fas fa-book-quran"></i><span>المصحف</span>
-            </div>
-            <div class="nav-item" id="navPlan" onclick="switchScreen('plan')">
+            <div class="nav-item active" id="navPlan" onclick="switchScreen('plan')">
                 <i class="fas fa-calendar-check"></i><span>الخطة</span>
             </div>
             <div class="nav-item" id="navQuiz" onclick="switchScreen('quiz')">
-                <i class="fas fa-brain"></i><span>اختبار</span>
+                <i class="fas fa-brain"></i><span>الاختبار</span>
             </div>
             <div class="nav-item" id="navStats" onclick="switchScreen('stats')">
-                <i class="fas fa-chart-pie"></i><span>إحصائيات</span>
+                <i class="fas fa-chart-pie"></i><span>الإحصائيات</span>
             </div>
         </nav>
+
     </div>
 
     <script src="app.js"></script>

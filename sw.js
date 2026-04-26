@@ -1,4 +1,4 @@
-const CACHE_NAME = 'quran-companion-v2';
+const CACHE_NAME = 'hifz-companion-v3';
 const STATIC_ASSETS = [
     'index.html',
     'style.css',
@@ -6,7 +6,6 @@ const STATIC_ASSETS = [
     'manifest.json'
 ];
 
-// Install - cache static assets
 self.addEventListener('install', (e) => {
     e.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
@@ -15,7 +14,6 @@ self.addEventListener('install', (e) => {
     );
 });
 
-// Activate - clean old caches
 self.addEventListener('activate', (e) => {
     e.waitUntil(
         caches.keys().then(cacheNames => {
@@ -28,14 +26,11 @@ self.addEventListener('activate', (e) => {
     );
 });
 
-// Fetch - cache first, then network
 self.addEventListener('fetch', (e) => {
     const { request } = e;
     const url = new URL(request.url);
 
-    // API requests - network first, then cache
-    if (url.hostname.includes('api.alquran.cloud') ||
-        url.hostname.includes('cdn.islamic.network')) {
+    if (url.hostname.includes('api.alquran.cloud')) {
         e.respondWith(
             fetch(request)
                 .then(response => {
@@ -48,7 +43,6 @@ self.addEventListener('fetch', (e) => {
         return;
     }
 
-    // Static assets - cache first
     e.respondWith(
         caches.match(request).then(cached => {
             if (cached) return cached;
@@ -61,48 +55,26 @@ self.addEventListener('fetch', (e) => {
     );
 });
 
-// Background sync for offline actions
-self.addEventListener('sync', (e) => {
-    if (e.tag === 'sync-stats') {
-        e.waitUntil(syncStats());
-    }
-});
-
-async function syncStats() {
-    // In a real app, this would sync with a server
-    console.log('Syncing stats...');
-}
-
-// Push notifications
 self.addEventListener('push', (e) => {
     const data = e.data.json();
     e.waitUntil(
-        self.registration.showNotification(data.title || 'رفيق القرآن', {
-            body: data.body || 'حان وقت وردك اليومي!',
+        self.registration.showNotification(data.title || 'رفيق الحفظ', {
+            body: data.body || 'حان وقت ورد الحفظ اليومي!',
             icon: 'https://cdn-icons-png.flaticon.com/512/2855/2855140.png',
-            badge: 'https://cdn-icons-png.flaticon.com/512/2855/2855140.png',
-            tag: 'daily-reminder',
-            requireInteraction: true,
-            actions: [
-                { action: 'open', title: 'فتح التطبيق' },
-                { action: 'dismiss', title: 'لاحقاً' }
-            ]
+            tag: 'daily-reminder'
         })
     );
 });
 
 self.addEventListener('notificationclick', (e) => {
     e.notification.close();
-
-    if (e.action === 'open' || !e.action) {
-        e.waitUntil(
-            clients.matchAll({ type: 'window' }).then(clientList => {
-                if (clientList.length > 0) {
-                    clientList[0].focus();
-                } else {
-                    clients.openWindow('./');
-                }
-            })
-        );
-    }
+    e.waitUntil(
+        clients.matchAll({ type: 'window' }).then(clientList => {
+            if (clientList.length > 0) {
+                clientList[0].focus();
+            } else {
+                clients.openWindow('./');
+            }
+        })
+    );
 });

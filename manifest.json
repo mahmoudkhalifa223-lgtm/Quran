@@ -1,15 +1,97 @@
 {
   "name": "رفيق القرآن",
   "short_name": "رفيق القرآن",
+  "description": "تطبيق لحفظ القرآن الكريم وتجويده مع اختبارات ذكية وخطط حفظ",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#2c5f2d",
-  "theme_color": "#2c5f2d",
+  "orientation": "portrait",
+  "background_color": "#004b23",
+  "theme_color": "#004b23",
+  "categories": [ "education", "religion", "books" ],
+  "lang": "ar",
+  "dir": "rtl",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "ورد اليوم",
+      "short_name": "ورد",
+      "description": "الانتقال مباشرة لورد اليوم",
+      "url": "index.html#plan",
+      "icons": [
+        {
+          "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "اختبار الحفظ",
+      "short_name": "اختبار",
+      "description": "بدء اختبار حفظ جديد",
+      "url": "index.html#quiz",
+      "icons": [
+        {
+          "src": "https://cdn-icons-png.flaticon.com/512/2855/2855140.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ]
 }
